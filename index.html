@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DevPan Code Lab</title>
+<style>
+:root {
+  --site-primary: #7c5cff;
+  --site-secondary: #161b2b;
+  --site-background: #0b0d14;
+  --site-on-primary: #ffffff;
+  --site-on-secondary: #f3f4fb;
+  --site-on-background: #f4f5fb;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  color-scheme: light dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+#app { min-height: 100vh; width: 100%; border-radius: 0; background-color: var(--site-background); background-image: radial-gradient(ellipse at 15% 0%, #30215b 0%, transparent 32%), radial-gradient(ellipse at 95% 15%, #102e43 0%, transparent 28%); color: var(--site-on-background); }
+.topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding: calc(18px * var(--site-spacing-scale)) calc(4vw * var(--site-spacing-scale)); border-bottom:1px solid #ffffff18; background:#0b0d14cc; backdrop-filter: blur(14px); position:sticky; top:0; z-index:5; }
+.brand { display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:-.04em; font-size:20px; font-family:var(--site-font-heading); }
+.logo { display:grid; place-items:center; width:38px; height:38px; border-radius:12px; background:linear-gradient(135deg,var(--site-primary),#24c9d8); box-shadow:0 8px 28px #7c5cff55; color:white; font-weight:900; }
+.brand small { display:block; color:#8e94a8; font-size:10px; letter-spacing:.18em; font-weight:700; margin-top:2px; }
+.status { display:flex; align-items:center; gap:8px; color:#aeb5c8; font-size:12px; border:1px solid #ffffff1c; padding:8px 12px; border-radius:999px; background:#111521; }
+.dot { width:7px; height:7px; border-radius:50%; background:#48e0a4; box-shadow:0 0 12px #48e0a4; }
+main { width:min(1280px,92vw); margin:0 auto; padding:48px 0 60px; }
+.hero { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:28px; }
+.eyebrow { color:#a79aff; text-transform:uppercase; font-size:11px; letter-spacing:.2em; font-weight:800; margin-bottom:12px; }
+h1 { font-family:var(--site-font-heading); font-size:clamp(32px,5vw,54px); letter-spacing:-.055em; line-height:1.04; margin:0; }
+h1 span { color:#9b88ff; }
+.sub { color:#9ba3b7; max-width:560px; line-height:1.7; margin:14px 0 0; font-size:14px; }
+.hero-chip { white-space:nowrap; padding:10px 13px; border:1px solid #8d7bff45; color:#c8c0ff; background:#7c5cff13; border-radius:12px; font-size:12px; }
+.workspace { border:1px solid #ffffff1c; background:#10131d; border-radius:calc(18px * var(--site-radius-scale)); overflow:hidden; box-shadow:0 24px 80px #0006; }
+.toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-bottom:1px solid #ffffff14; background:#151927; }
+.filetab { display:flex; align-items:center; gap:9px; color:#e5e7f1; font-size:13px; font-weight:650; }
+.fileicon { display:grid; place-items:center; width:25px; height:25px; border-radius:7px; background:#7c5cff24; color:#b7aaff; font-size:12px; }
+.controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+select, input[type="search"] { border:1px solid #ffffff20; background:#0d1019; color:#e9ebf5; border-radius:9px; padding:10px 12px; font:inherit; font-size:12px; outline:none; }
+select:focus,input:focus,textarea:focus { border-color:#9380ff; box-shadow:0 0 0 3px #7c5cff24; }
+button { border:1px solid #ffffff20; background:#1d2232; color:#e8eaff; border-radius:9px; padding:10px 13px; font:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:transform .15s, background .15s, border-color .15s; }
+button:hover { transform:translateY(-1px); border-color:#9380ff88; }
+button.primary { background:var(--site-primary); border-color:var(--site-primary); color:var(--site-on-primary); }
+button.danger:hover { border-color:#ff7777; color:#ffaaaa; }
+.editor-wrap { display:grid; grid-template-columns:52px minmax(0,1fr); min-height:390px; background:#0d1018; }
+.gutter { padding:20px 12px 20px 0; text-align:right; color:#535b70; font:12px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace; white-space:pre; user-select:none; overflow:hidden; }
+textarea { width:100%; min-height:390px; resize:vertical; border:0; outline:0; border-radius:0; background:transparent; color:#dbe2f5; padding:20px 20px 24px 0; font:13px/1.75 ui-monospace,SFMono-Regular,Consolas,monospace; tab-size:2; white-space:pre; overflow:auto; }
+textarea:focus { box-shadow:none; border:0; }
+.bottom { display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; padding:11px 16px; border-top:1px solid #ffffff14; color:#8d96ad; font-size:11px; background:#121622; }
+.metrics { display:flex; flex-wrap:wrap; gap:16px; }
+.metric b { color:#dfe3f1; font-weight:650; }
+.searchrow { display:flex; gap:8px; align-items:center; margin-top:18px; }
+.searchrow input { flex:1; min-width:140px; }
+.note { margin-top:20px; border:1px solid #ffffff14; border-radius:14px; padding:16px 18px; display:flex; gap:12px; align-items:flex-start; background:#ffffff05; color:#a8afc2; font-size:12px; line-height:1.6; }
+.note strong { color:#e6e7f2; }
+.noteicon { font-size:18px; }
+footer { padding:20px 4vw 30px; border-top:1px solid #ffffff14; display:flex; justify-content:space-between; gap:12px; color:#747c91; font-size:11px; }
+.toast { position:fixed; bottom:24px; left:50%; transform:translate(-50%,20px); opacity:0; pointer-events:none; background:#e9e6ff; color:#211747; padding:11px 16px; border-radius:11px; font-size:12px; font-weight:800; box-shadow:0 8px 30px #0006; transition:all .2s; z-index:10; }
+.toast.show { opacity:1; transform:translate(-50%,0); }
+@media(max-width:680px) { .topbar { padding:14px 4vw; } .status { display:none; } main { padding-top:34px; } .hero { align-items:flex-start; flex-direction:column; } .hero-chip { white-space:normal; } .toolbar { align-items:flex-start; flex-direction:column; } .controls { width:100%; } .controls select { flex:1; } .editor-wrap, textarea { min-height:340px; } footer { flex-direction:column; } }
+@media (prefers-color-scheme: light) { .topbar { background:#0b0d14f2; } }
+</style>
+</head>
+<body>
+<div id="app" data-sites-preview-theme="custom">
+  <header class="topbar">
+    <div class="brand"><div class="logo">DP</div><div>DevPan <small>CODE LAB / PERSONAL</small></div></div>
+    <div class="status"><span class="dot"></span> Local workspace <span style="color:#596176">•</span> Ready</div>
+  </header>
+  <main>
+    <section class="hero">
+      <div><div class="eyebrow">✦ Your code. Your space.</div><h1>Build something<br><span>different.</span></h1><p class="sub">Góc code riêng của mày — dán snippet, tìm nội dung, sao chép nhanh hoặc tải code về máy. Gọn, tối, tập trung vào việc code.</p></div>
+      <div class="hero-chip">⌘ &nbsp; PERSONAL CODE SPACE</div>
+    </section>
+    <section class="workspace" aria-label="Code editor">
+      <div class="toolbar">
+        <div class="filetab"><span class="fileicon">&lt;/&gt;</span><span id="filename">my-code.lua</span></div>
+        <div class="controls">
+          <select id="language" aria-label="Ngôn ngữ code"><option value="java" selected>Java</option><option value="lua">Lua</option><option value="javascript">JavaScript</option><option value="python">Python</option><option value="html">HTML</option><option value="css">CSS</option><option value="json">JSON</option><option value="txt">Plain text</option></select>
+          <button id="copy" class="primary">▣ Sao chép code</button>
+          <button id="download">↓ Tải file</button>
+          <button id="clear" class="danger">Xóa</button>
+        </div>
+      </div>
+      <div class="editor-wrap"><div class="gutter" id="gutter">1</div><textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Dán code tại đây" placeholder="-- Dán code của mày vào đây...\n-- Chọn ngôn ngữ ở góc trên\n\nprint('Hello, DevPan!')"></textarea></div>
+      <div class="bottom"><div class="metrics"><span class="metric">Lines <b id="lines">1</b></span><span class="metric">Characters <b id="chars">0</b></span><span class="metric">Words <b id="words">0</b></span></div><div id="langstatus">Lua · UTF-8</div></div>
+    </section>
+    <div class="searchrow"><input id="search" type="search" placeholder="Tìm chữ trong code…" aria-label="Tìm trong code"><button id="find">Tìm tiếp ↵</button><button id="selectall">Chọn tất cả</button></div>
+    <div class="note"><div class="noteicon">✦</div><div><strong>Không gian code của riêng mày.</strong><br>Code được xử lý ngay trong trang xem trước này; không tự gửi lên máy chủ. Hãy tải file về để giữ bản sao. Đây là bản preview, chưa phải website công khai có link riêng.</div></div>
+  </main>
+  <footer><span>DEVPan / CODE LAB</span><span>Made for builders • Stay curious.</span></footer>
+  <div class="toast" id="toast">Done!</div>
+</div>
+<script>
+const code = document.getElementById('code');
+const language = document.getElementById('language');
+const gutter = document.getElementById('gutter');
+const toast = document.getElementById('toast');
+let searchIndex = 0;
+const extensions = {java:'java',lua:'lua',javascript:'js',python:'py',html:'html',css:'css',json:'json',txt:'txt'};
+function notify(message) { toast.textContent = message; toast.classList.add('show'); window.setTimeout(() => toast.classList.remove('show'), 1700); }
+function updateStats() {
+  const value = code.value;
+  const lineCount = value.length ? value.split('\n').length : 1;
+  document.getElementById('lines').textContent = lineCount;
+  document.getElementById('chars').textContent = value.length;
+  document.getElementById('words').textContent = (value.trim().match(/\S+/g) || []).length;
+  gutter.textContent = Array.from({length:lineCount},(_,i)=>i+1).join('\n');
+  document.getElementById('langstatus').textContent = language.options[language.selectedIndex].text + ' · UTF-8';
+  document.getElementById('filename').textContent = 'my-code.' + extensions[language.value];
+}
+code.addEventListener('input', updateStats);
+code.addEventListener('scroll', () => { gutter.scrollTop = code.scrollTop; });
+language.addEventListener('change', updateStats);
+code.addEventListener('keydown', event => {
+  if (event.key === 'Tab') {
+    event.preventDefault();
+    const start = code.selectionStart, end = code.selectionEnd;
+    code.setRangeText('  ', start, end, 'end');
+    updateStats();
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+    event.preventDefault(); downloadCode();
+  }
+});
+document.getElementById('copy').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(code.value); notify('Đã sao chép code!'); }
+  catch (_) { code.focus(); code.select(); const ok = document.execCommand('copy'); notify(ok ? 'Đã sao chép code!' : 'Bôi đen code rồi sao chép nhé.'); }
+});
+function downloadCode() {
+  const blob = new Blob([code.value], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a'); link.href = url; link.download = 'my-code.' + extensions[language.value];
+  document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url); notify('Đã tạo file tải xuống!');
+}
+document.getElementById('download').addEventListener('click', downloadCode);
+document.getElementById('clear').addEventListener('click', () => { if (code.value && confirm('Xóa toàn bộ code đang có?')) { code.value = ''; updateStats(); notify('Đã xóa nội dung.'); } });
+document.getElementById('selectall').addEventListener('click', () => { code.focus(); code.select(); });
+function findNext() {
+  const needle = document.getElementById('search').value;
+  if (!needle) { notify('Nhập từ cần tìm trước nhé.'); return; }
+  const haystack = code.value.toLowerCase();
+  const found = haystack.indexOf(needle.toLowerCase(), searchIndex);
+  const index = found >= 0 ? found : haystack.indexOf(needle.toLowerCase());
+  if (index < 0) { notify('Không tìm thấy nội dung.'); return; }
+  code.focus(); code.setSelectionRange(index, index + needle.length);
+  const before = code.value.slice(0,index); const line = before.split('\n').length - 1;
+  code.scrollTop = Math.max(0, line * 23 - 90); searchIndex = index + needle.length; notify('Đã tìm thấy.');
+}
+document.getElementById('find').addEventListener('click', findNext);
+document.getElementById('search').addEventListener('keydown', e => { if(e.key === 'Enter') findNext(); });
+code.value = `package com.rimuru.shootingstar.world;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+
+import java.util.List;
+
+public class OrbitalStrikeHandler {
+
+    public static void triggerStrike(ServerLevel level, double x, double surfaceY, double z, LivingEntity caster) {
+        BlockPos centerPos = new BlockPos((int) x, (int) surfaceY, (int) z);
+
+        // 1. Phát âm thanh cảnh báo từ ngoài không gian
+        level.playSound(null, centerPos, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 10.0f, 0.5f);
+        level.playSound(null, centerPos, SoundEvents.BEACON_ACTIVATE, SoundSource.MASTER, 5.0f, 0.8f);
+
+        // 2. Tạo hiệu ứng cột ánh sáng và hủy diệt block từ trên cao xuống tận Void
+        int radius = 5; // Bán kính hủy diệt của cột laser
+        int startY = level.getMaxBuildHeight();
+        int endY = level.getMinBuildHeight();
+
+        // Xóa block theo hình trụ đứng (Cột năng lượng quét qua)
+        for (int currY = startY; currY >= endY; currY--) {
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    if (dx * dx + dz * dz <= radius * radius) {
+                        BlockPos targetPos = new BlockPos((int) x + dx, currY, (int) z + dz);
+                        
+                        // Xóa block (thay thế bằng không khí)
+                        if (!level.isEmptyBlock(targetPos)) {
+                            level.destroyBlock(targetPos, false, caster); // false nghĩa là không rớt đồ ra ngoài để tối ưu lag
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3. Tạo hiệu ứng hạt sáng rực rỡ dọc cột laser
+        for (int y = endY; y <= startY; y += 3) {
+            level.sendParticles(ParticleTypes.FLASH, x, y, z, 2, 0.5, 1.5, 0.5, 0.1);
+            level.sendParticles(ParticleTypes.LAVA, x, y, z, 5, radius, 1.0, radius, 0.2);
+        }
+
+        // 4. Gây sát thương cực lớn cho mọi thực thể nằm trong vùng càn quét
+        AABB damageArea = new AABB(x - radius, endY, z - radius, x + radius, startY, z + radius);
+        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, damageArea);
+        
+        for (LivingEntity entity : entities) {
+            if (entity != caster) {
+                entity.hurt(level.damageSources().magic(), Float.MAX_VALUE); // Bốc hơi tức khắc
+            }
+        }
+    }
+}`;
+updateStats();
+</script>
+</body>
+</html>
